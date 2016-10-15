@@ -73,4 +73,4 @@ def graph():
 	return render_template("graph.html")
 	
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT' #Needed for sessions apparently? Should be randomized?
-app.run()
+app.run('0.0.0.0', 8080)
