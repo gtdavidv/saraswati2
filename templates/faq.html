@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set active_page = "faq" %}
+
+{% block content %}
+  <div class="container ">
+    <div class="panel-group" id="faqAccordion">
+        <div class="panel panel-default ">
+            <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question0">
+                 <h4 class="panel-title">
+                    <a href="#" class="ing">Why have a separate FAQ page for a chatbot?</a>
+                 </h4>
+            </div>
+            <div id="question0" class="panel-collapse collapse" style="height: 0px;">
+                <div class="panel-body">
+                    <p>You just jump right into the deep end, don't you?</p>
+                    <p>Saraswati is--first and foremost--a universal online tutor. It primarily takes the form of a conversation agent (chatbot), but that's really not the point. The point is to deliver information in the most efficient form possible that will maximize retention. You clicked here looking for an FAQ page, so that's what you go.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-default ">
+            <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question1">
+                 <h4 class="panel-title">
+                    <a href="#" class="ing">What's with the name?</a>
+                 </h4>
+            </div>
+            <div id="question1" class="panel-collapse collapse" style="height: 0px;">
+                <div class="panel-body">
+                    <p>According to Wikipedia, <a href="https://en.wikipedia.org/wiki/Saraswati" target="_blakn">Saraswati</a> is the Hindu goddess of knowledge, music, arts, wisom, and learning.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+{%- endblock %}

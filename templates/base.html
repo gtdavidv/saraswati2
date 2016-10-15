@@ -1,0 +1,43 @@
+{% extends "bootstrap/base.html" %}
+
+{% import "bootstrap/utils.html" as utils %}
+
+{% block title %}Saraswati - Your Universal Tutor{% endblock %}
+
+{% block styles -%}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Saraswati</a>
+    </div>
+
+	{% set active_page = active_page|default('index') -%}
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li{% if active_page == "about" %} class="active"{% endif %}><a href="about">About</a></li>
+        <li{% if active_page == "faq" %} class="active"{% endif %}><a href="faq">FAQ</a></li>
+        <li{% if active_page == "contact" %} class="active"{% endif %}><a href="contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+	  {%- if messages %}
+		<div class="row">
+		  <div class="col-md-12">
+			{{utils.flashed_messages(messages)}}
+		  </div>
+		</div>
+	  {%- endif %}
+  {%- endwith %}
+  </div>
+{% endblock %}

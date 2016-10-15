@@ -1,0 +1,9 @@
+#################################
+# Technologies used by Saraswati
+#################################
+
+-Python 3.5.1 (Core programming language)
+-Flask 0.11.1 (Lightweight web framework for Python)
+-pip 8.1.2 (Python package manager)
+-Bootstrap 3, as implemented by Flask-Bootstrap 3.3.6.0 (css and javascript to make the site prettier)
+-SQLAlchemy 1.0.15, as implemented by Flask SQLAlchemy 2.1 (database ORM)
