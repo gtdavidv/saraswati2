@@ -17,13 +17,26 @@ db = SQLAlchemy(app)
 
 class message(db.Model):
 	id = db.Column('message_id', db.Integer, primary_key = True)
-	text = db.Column(db.String(255))
+	text = db.Column(db.Text)
 	time = db.Column(db.Integer, default=time)
 	session_id = db.Column(db.Integer)
 
 	def __init__(self, text, session_id):
 		self.text = text
 		self.session_id = session_id
+
+class training_chats(db.Model):
+	id = db.Column('message_id', db.Integer, primary_key = True)
+	chat_id = db.Column(db.Integer)
+	party = db.Column(db.SmallInteger)
+	text = db.Column(db.Text)
+	node_id = db.Column(db.Integer)
+
+	def __init__(self, chat_id, party, text, node_id):
+		self.chat_id = chat_id
+		self.praty = party
+		self.text = text
+		self.node_id = node_id
 	   
 db.create_all()
 
