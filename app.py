@@ -31,7 +31,7 @@ class message(db.Model):
 """
 " Training chats model
 """
-class training_chats(db.Model):
+class training_chat(db.Model):
 	id = db.Column('message_id', db.Integer, primary_key = True)
 	chat_id = db.Column(db.Integer)
 	party = db.Column(db.SmallInteger)
@@ -40,14 +40,14 @@ class training_chats(db.Model):
 
 	def __init__(self, chat_id, party, text, node_id):
 		self.chat_id = chat_id
-		self.praty = party
+		self.party = party
 		self.text = text
 		self.node_id = node_id
 
 """
 " Model for the nodes of the semantic graph
 """
-class semantic_graph_nodes(db.Model):
+class semantic_graph_node(db.Model):
 	id = db.Column('node_id', db.Integer, primary_key = True)
 	title = db.Column(db.String(255))
 
@@ -57,7 +57,7 @@ class semantic_graph_nodes(db.Model):
 """
 " Model for the relationships that connect the nodes of the semantic graph
 """
-class semantic_graph_relationships(db.Model):
+class semantic_graph_relationship(db.Model):
 	id = db.Column('relationship_id', db.Integer, primary_key = True)
 	node_id_1 = db.Column(db.Integer)
 	node_id_2 = db.Column(db.Integer)
@@ -111,7 +111,28 @@ def admin():
 
 @app.route('/training_chats')
 def training_chats():
-	return render_template("training_chats.html")
+	return render_template("training_chats.html", chats = training_chat.query.distinct(training_chat.chat_id))
+	
+@app.route('/training_chat')
+def render_training_chat():
+	return render_template("training_chat.html")
+
+@app.route('/training_chat', methods=['POST'])
+def add_training_chat():
+	if request.form.get('chat_id') is None:
+		lastRecord = training_chat.query.order_by(training_chat.chat_id.desc()).first()
+		if lastRecord is not None:
+			chat_id = lastRecord.chat_id + 1
+		else:
+			chat_id = 1
+	else:
+		chat_id = request.form.get('chat_id')
+		
+	insertMessage = training_chat(chat_id, request.form.get('party'), request.form.get('message'), request.form.get('node_id'))
+	db.session.add(insertMessage)
+	db.session.commit()
+	
+	return str(chat_id)
 	
 @app.route('/graph')
 def graph():

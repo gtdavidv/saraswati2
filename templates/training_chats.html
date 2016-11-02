@@ -3,7 +3,10 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
-		TBD
+		<a href="training_chat"><input type="button" value="Add New Training Chat" /></a>
+		{% for chat in training_chats %}
+			{{ chat.chat_id }}<br />
+		{% endfor %}
 	</div>
   </div>
 {% endblock %}

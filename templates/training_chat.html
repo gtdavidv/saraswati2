@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="jumbotron">
+		<form action="" method="post">
+			Semantic Graph Node: <select name="node_id"></select><br />
+			Party: <select name="party"><option value="0">AI</option><option value="1">Human</option></select><br />
+			Message:<br />
+			<textarea name="message" rows="4" style="width: 400px;"></textarea>
+			<div style="height: 0.7em;"></div>
+			<input type="submit" value="Add" />
+		</form>
+	</div>
+  </div>
+{% endblock %}
