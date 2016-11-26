@@ -3,7 +3,19 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
-		TBD
+		<form action="" method="post">
+			<div style="margin-bottom: 0.8em;">
+				<input type="text" name="title" placeholder="Node title" /> <input type="submit" value="Add Node" />
+			</div>
+		</form>
+		
+		{% if not nodes %}
+			No nodes found
+		{% else %}
+			{% for node in nodes %}
+				<a href="node?id={{ node.id }}">{{ node.title }}</a> - <a href="graph?del={{ node.id }}" onclick="return confirm('Are you sure?');">Delete</a><br />
+			{% endfor %}
+		{% endif %}
 	</div>
   </div>
 {% endblock %}

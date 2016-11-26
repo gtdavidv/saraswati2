@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="jumbotron">
+		<form action="node?id={{ node_id }}" method="post"><div>
+			Node: {{ node_select_list|safe }}<br />
+			Relationship to node: <input type="text" name="relationship_1_to_2" placeholder="e.g., parent" /><br />
+			Node's relationship: <input type="text" name="relationship_2_to_1" placeholder="e.g., child" /><br />
+			<input type="submit" value="Add relationship" />
+		</div></form>
+	</div>
+  </div>
+{% endblock %}

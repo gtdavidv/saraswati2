@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="jumbotron">
+		<a href="add_relationship?id={{ node_id }}">Add Relationship</a>
+		<div style="height: 0.8em;"></div>
+		{% if not nodes %}
+			No connections found
+		{% else %}
+			Connected to:<br />
+			{% for node in nodes %}
+				<a href="node?id={{ node.other_node_id }}">{{ node.nodeTitle }}</a> - {{node.relationship}} - <a href="node?id={{ node_id }}&del={{ node.relationship_id }}" onclick="return confirm('Are you sure?');">Delete relationship</a><br />
+			{% endfor %}
+		{% endif %}
+	</div>
+  </div>
+{% endblock %}
