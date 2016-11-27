@@ -3,9 +3,14 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
+		<div class="navigation_header">
+			<a href="admin">Admin</a> &gt; Training Chats
+		</div>
 		<a href="training_chat"><input type="button" value="Add New Training Chat" /></a>
-		{% for chat in training_chats %}
-			{{ chat.chat_id }}<br />
+		<div style="height: 0.8em;"></div>
+		{% for chat in chats %}
+			<a href="training_chat?id={{ chat.chat_id }}">{{ chat.text }}</a>
+			<div style="height: 0.5em;"></div>
 		{% endfor %}
 	</div>
   </div>

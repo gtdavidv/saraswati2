@@ -3,14 +3,32 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
-		<form action="" method="post">
-			Semantic Graph Node: <select name="node_id"></select><br />
+		<div class="navigation_header">
+			<a href="admin">Admin</a> &gt; <a href="training_chats">Training Chats</a> &gt; Training Chat
+		</div>
+		{% for chat in chats %}
+			{% if chat.party == 0 %}
+				AI: 
+			{% else %}
+				Human: 
+			{% endif %}
+			({{ chat.node_name }})<br />
+			{{ chat.text }}<br />
+			<a href="training_chat?id={{ chat_id }}&del={{ chat.id }}" style="font-size: 0.8em;" onclick="return confirm('Are you sure?')">Delete</a>
+			<div style="height: 0.5em;"></div>
+		{% endfor %}
+		<form action="" method="post" onsubmit="return check_add_training_chat()"><div style="margin-top: 0.5em;">
+			Semantic Graph Node: {{ node_select_list|safe }}<br />
 			Party: <select name="party"><option value="0">AI</option><option value="1">Human</option></select><br />
 			Message:<br />
-			<textarea name="message" rows="4" style="width: 400px;"></textarea>
+			<textarea name="message" id="message" rows="4" style="width: 400px;"></textarea>
 			<div style="height: 0.7em;"></div>
 			<input type="submit" value="Add" />
-		</form>
+		</div></form>
 	</div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/admin_functions.js')}}"></script>
 {% endblock %}

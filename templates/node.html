@@ -3,6 +3,9 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
+		<div class="navigation_header">
+			<a href="admin">Admin</a> &gt; <a href="graph">Semantic Graph</a> &gt; {{ node_name }}
+		</div>
 		<a href="add_relationship?id={{ node_id }}">Add Relationship</a>
 		<div style="height: 0.8em;"></div>
 		{% if not nodes %}

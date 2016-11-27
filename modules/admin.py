@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, session
+from flask import Flask, Blueprint, render_template, request, session, redirect
 from db import *
 from helpers import node_select_list
 
@@ -10,28 +10,68 @@ def admin_page():
 
 @admin.route('/training_chats')
 def training_chats():
-	return render_template("training_chats.html", chats = training_chat.query.distinct(training_chat.chat_id))
+	results = training_chat.query.order_by(training_chat.chat_id)
+	chats = []
+	for result in results:
+		addResult = True
+		for chat in chats:
+			if chat.chat_id == result.chat_id:
+				addResult = False
+				break
+		
+		if addResult:
+			chats.append(result)
+			
+	return render_template("training_chats.html", chats = chats)
 	
 @admin.route('/training_chat')
 def render_training_chat():
-	return render_template("training_chat.html")
+	if "id" in request.args:
+		chatID = request.args["id"]
+		results = training_chat.query.filter_by(chat_id=chatID)
+		if not results:
+			return render_template("error.html", error_message = "Database error")
+		else:
+			if "del" in request.args:
+				training_chat.query.filter_by(id=request.args["del"]).delete()
+				db.session.commit()
+				
+			training_chats = []
+			for result in results:
+				graphNode = semantic_graph_node.query.filter_by(id=result.node_id).first()
+				if not graphNode:
+					return render_template("error.html", error_message="Database error: missing node")
+				
+				newItem = type('tmp', (object,), {})
+				newItem.party = result.party
+				newItem.text = result.text
+				newItem.node_name = graphNode.title
+				newItem.id = result.id
+				training_chats.append(newItem)
+	else:
+		training_chats = []
+		chatID = 0
+		
+	return render_template("training_chat.html", node_select_list = node_select_list(), chats = training_chats, chat_id = chatID)
 
 @admin.route('/training_chat', methods=['POST'])
 def add_training_chat():
-	if request.form.get('chat_id') is None:
+	if "id" not in request.args:
 		lastRecord = training_chat.query.order_by(training_chat.chat_id.desc()).first()
 		if lastRecord is not None:
 			chat_id = lastRecord.chat_id + 1
 		else:
 			chat_id = 1
 	else:
-		chat_id = request.form.get('chat_id')
+		chat_id = request.args["id"]
 		
-	insertMessage = training_chat(chat_id, request.form.get('party'), request.form.get('message'), request.form.get('node_id'))
+	insertMessage = training_chat(chat_id, request.form.get('party'), request.form.get('message'), request.form.get('node_list'))
 	db.session.add(insertMessage)
 	db.session.commit()
 	
-	return str(chat_id)
+	return redirect("training_chat?id=" + str(chat_id))
+	
+	#return render_training_chat()
 	
 @admin.route('/graph')
 def graph():
@@ -52,6 +92,11 @@ def add_node():
 @admin.route('/node')
 def view_node():
 	nodeID = request.args['id']
+	thisNode = semantic_graph_node.query.filter_by(id=nodeID).first()
+	if not thisNode:
+		return render_template("error.html", error_message = "Database error")
+	else:
+		nodeName = thisNode.title
 	
 	if "del" in request.args:
 		semantic_graph_relationship.query.filter_by(id=request.args["del"]).delete()
@@ -59,6 +104,7 @@ def view_node():
 	
 	nodeList = []
 	
+	#Need to get all of the relationships (node_id_1 and node_id_2
 	queryList = semantic_graph_relationship.query.filter_by(node_id_1 = nodeID)
 	for result in queryList:
 		newItem = type('tmp', (object,), {}) #Hacky way to make newItem a generic object
@@ -81,7 +127,7 @@ def view_node():
 		newItem.nodeTitle = titleQuery.title
 		nodeList.append(newItem)
 	
-	return render_template("node.html", nodes = nodeList, node_id = nodeID)
+	return render_template("node.html", nodes = nodeList, node_id = nodeID, node_name = nodeName)
 	
 @admin.route('/node', methods=['POST'])
 def add_relationship_process():
@@ -94,4 +140,12 @@ def add_relationship_process():
 
 @admin.route('/add_relationship')
 def add_relationship_form():
-	return render_template("add_relationship.html", node_id = request.args['id'], node_select_list = node_select_list())
+	nodeID = request.args['id']
+	
+	thisNode = semantic_graph_node.query.filter_by(id=nodeID).first()
+	if not thisNode:
+		return render_template("error.html", error_message = "Database error")
+	else:
+		nodeName = thisNode.title
+		
+	return render_template("add_relationship.html", node_id = nodeID, node_select_list = node_select_list(), node_name = nodeName)

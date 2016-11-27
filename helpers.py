@@ -1,7 +1,7 @@
 from db import *
 
 def node_select_list():
-	returnString = "<select name=\"node_list\">"
+	returnString = "<select name=\"node_list\" id=\"node_list_select\">"
 	
 	results = semantic_graph_node.query.order_by(semantic_graph_node.title.asc())
 	if not results:

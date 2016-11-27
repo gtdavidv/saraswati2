@@ -56,3 +56,9 @@ body{
 .chat-bubble-parent{
 	clear: both;
 }
+
+.navigation_header{
+	margin-top: -1em;
+	font-size: 0.8em;
+	margin-bottom: 1.5em;
+}

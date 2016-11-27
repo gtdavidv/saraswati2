@@ -3,6 +3,9 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
+		<div class="navigation_header">
+			<a href="admin">Admin</a> &gt; <a href="graph">Semantic Graph</a> &gt; <a href="node?id={{ node_id }}">{{ node_name }}</a> &gt; Add Relationship
+		</div>
 		<form action="node?id={{ node_id }}" method="post"><div>
 			Node: {{ node_select_list|safe }}<br />
 			Relationship to node: <input type="text" name="relationship_1_to_2" placeholder="e.g., parent" /><br />
