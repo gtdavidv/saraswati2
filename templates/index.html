@@ -21,5 +21,6 @@
 	{% for message in messages %}
 		addMessageToScreen({{ message.text|tojson|safe }}, 'test', "{{message.time}}");
 	{% endfor %}
+	document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
 </script>
 {% endblock %}

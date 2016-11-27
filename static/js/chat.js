@@ -18,6 +18,7 @@ document.getElementById('chat-input').onkeyup = function(e) {
 // Handles when the user submits the text in the chat bot
 ///////////////
 sendChat = function(){
+	var inputMessage = document.getElementById('chat-input').value;
 	//Send call to add to the database
 	var oReq = new XMLHttpRequest();
 	oReq.addEventListener("load", transferComplete);
@@ -25,13 +26,27 @@ sendChat = function(){
 	oReq.addEventListener("abort", transferCanceled);
 	oReq.open("POST", 'process_chat', true);
 	oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	oReq.send("message=" + document.getElementById('chat-input').value);
+	oReq.send("message=" + inputMessage);
 	
 	//Add to the screen
 	var timestamp = new Date();
 	addMessageToScreen(document.getElementById('chat-input').value, 'You', timestamp.getTime()/1000);
 	document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
 	document.getElementById('chat-input').value = '';
+	
+	//Process a response
+	var oReq2 = new XMLHttpRequest();
+	oReq2.addEventListener("error", transferFailed);
+	oReq2.addEventListener("abort", transferCanceled);
+	oReq2.open("POST", 'process_response', true);
+	oReq2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	oReq2.send("message=" + inputMessage);
+	
+	oReq2.onload = function(){
+		//Add to the screen
+		addMessageToScreen(oReq2.responseText, 'Saraswati', timestamp.getTime()/1000);
+		document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+	}
 }
 
 ///////////////
