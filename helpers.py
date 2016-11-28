@@ -14,3 +14,9 @@ def node_select_list():
 	returnString += "</select>"
 	
 	return returnString
+
+def clean_string(inputString):
+	whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+	outputString = ''.join(filter(whitelist.__contains__, inputString))
+	
+	return outputString

@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, render_template, request, session
 from db import *
 import operator
+from helpers import *
 
 chat = Blueprint('chat', __name__)
 	
@@ -53,6 +54,15 @@ def determine_node(inputMessage):
 		return 0
 
 def determine_response(inputMessage, subjectNode):
+	results = training_chat.query.all()
+	for result in results:
+		if clean_string(result.text).lower() == clean_string(inputMessage).lower():
+			print('YES')
+			result2 = training_chat.query.order_by(training_chat.id).filter_by(chat_id=result.chat_id).filter(training_chat.id > result.id).first()
+			return result2.text
+		else:
+			print(clean_string(result.text) + ' is not ' + clean_string(inputMessage))
+	
 	if subjectNode is not 0:
 		results = training_chat.query.filter_by(node_id=subjectNode).order_by(training_chat.id)
 		responseText = results[1].text
