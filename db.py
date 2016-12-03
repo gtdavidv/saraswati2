@@ -10,10 +10,12 @@ class message(db.Model):
 	id = db.Column('message_id', db.Integer, primary_key = True)
 	text = db.Column(db.Text)
 	time = db.Column(db.Integer, default=time)
+	party = db.Column(db.SmallInteger)
 	session_id = db.Column(db.Integer)
 
-	def __init__(self, text, session_id):
+	def __init__(self, text, party, session_id):
 		self.text = text
+		self.party = party
 		self.session_id = session_id
 
 """

@@ -30,7 +30,7 @@ sendChat = function(){
 	
 	//Add to the screen
 	var timestamp = new Date();
-	addMessageToScreen(document.getElementById('chat-input').value, 'You', timestamp.getTime()/1000);
+	addMessageToScreen(document.getElementById('chat-input').value, 1, timestamp.getTime()/1000);
 	document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
 	document.getElementById('chat-input').value = '';
 	
@@ -44,7 +44,7 @@ sendChat = function(){
 	
 	oReq2.onload = function(){
 		//Add to the screen
-		addMessageToScreen(oReq2.responseText, 'Saraswati', timestamp.getTime()/1000);
+		addMessageToScreen(oReq2.responseText, 0, timestamp.getTime()/1000);
 		document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
 	}
 }
@@ -63,9 +63,15 @@ addMessageToScreen = function(message, agent, time){
 	var parentDiv = document.createElement('div');
 	parentDiv.className = 'chat-bubble-parent';
 	var timestampDiv = document.createElement('div');
-	timestampDiv.className = 'chat-bubble-timestamp pull-right';
 	var chatDiv = document.createElement('div');
-	chatDiv.className = 'chat-bubble pull-right';
+	
+	if (agent == 0){
+		timestampDiv.className = 'chat-bubble-timestamp pull-left';
+		chatDiv.className = 'chat-bubble chat-bubble-ai pull-left';
+	} else {
+		timestampDiv.className = 'chat-bubble-timestamp pull-right';
+		chatDiv.className = 'chat-bubble chat-bubble-human pull-right';
+	}
 	
 	var date = new Date(time*1000);
 	var hours = date.getHours();

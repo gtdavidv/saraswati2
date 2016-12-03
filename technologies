@@ -7,3 +7,4 @@
 -pip 8.1.2 (Python package manager)
 -Bootstrap 3, as implemented by Flask-Bootstrap 3.3.6.0 (css and javascript to make the site prettier)
 -SQLAlchemy 1.0.15, as implemented by Flask SQLAlchemy 2.1 (database ORM)
+-NLTK 3.2.1 (Natural Language Processing package)

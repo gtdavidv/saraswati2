@@ -19,7 +19,7 @@
 <script src="{{url_for('static', filename='js/chat.js')}}"></script>
 <script type="text/javascript">
 	{% for message in messages %}
-		addMessageToScreen({{ message.text|tojson|safe }}, 'test', "{{message.time}}");
+		addMessageToScreen({{ message.text|tojson|safe }}, {{ message.party }}, "{{message.time}}");
 	{% endfor %}
 	document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
 </script>

@@ -2,13 +2,33 @@ from flask import Flask, Blueprint, render_template, request, session
 from db import *
 import operator
 from helpers import *
+import nltk
 
 chat = Blueprint('chat', __name__)
+	
+@chat.route('/')
+def index():
+	if session.get('session_id') is None:
+		session['session_id'] = str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
+		
+	messageList = []
+	results = message.query.filter_by(session_id=session['session_id'])
+	for result in results:
+		newItem = type('tmp', (object,), {})
+		newItem.text = result.text
+		newItem.time = result.time
+		newItem.party = result.party
+		if result.party is None:
+			newItem.party = 1
+			
+		messageList.append(newItem)
+		
+	return render_template("index.html", messages = messageList)
 	
 @chat.route('/process_chat', methods=['POST'])
 def process_chat():
 	if session.get('session_id') is not None:
-		insertMessage = message(request.form.get('message'), session['session_id'])
+		insertMessage = message(request.form.get('message'), 1, session['session_id'])
 		db.session.add(insertMessage)
 		db.session.commit()
 		
@@ -23,7 +43,7 @@ def process_response():
 		subjectNode = determine_node(inputMessage)
 		responseText = determine_response(inputMessage, subjectNode)
 		
-		insertMessage = message(responseText, session['session_id'])
+		insertMessage = message(responseText, 0, session['session_id'])
 		db.session.add(insertMessage)
 		db.session.commit()
 		
@@ -32,20 +52,37 @@ def process_response():
 		return False
 
 def determine_node(inputMessage):
-	inputList = inputMessage.split()
+	inputList = clean_string(inputMessage).lower().split()
+	posTag = nltk.pos_tag(inputList)
 	
 	nodeList = {}
+	counter = 0
 	for word in inputList:
 		searchString = "%" + word + "%"
-		results = training_chat.query.filter(training_chat.text.like(searchString))
+		results = training_chat.query.filter(training_chat.text.ilike(searchString))
+		resultCount = training_chat.query.filter(training_chat.text.ilike(searchString)).count()
 		
 		anyResults = False	
 		for result in results:
 			anyResults = True
-			if result.node_id in nodeList:
-				nodeList[result.node_id] += 1
+			
+			addAmount = 0
+			if result.party == 0:
+				addAmount += 1
 			else:
-				nodeList[result.node_id] = 1
+				addAmount += 3
+			addAmount /= resultCount
+			
+			if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
+				addAmount *= 3
+				print(posTag[counter][0] + ' - ' + posTag[counter][1])
+				
+			if result.node_id in nodeList:
+				nodeList[result.node_id] += addAmount
+			else:
+				nodeList[result.node_id] = addAmount
+		
+		counter += 1
 
 	if anyResults:
 		topNode = max(nodeList, key=nodeList.get)
@@ -57,11 +94,8 @@ def determine_response(inputMessage, subjectNode):
 	results = training_chat.query.all()
 	for result in results:
 		if clean_string(result.text).lower() == clean_string(inputMessage).lower():
-			print('YES')
 			result2 = training_chat.query.order_by(training_chat.id).filter_by(chat_id=result.chat_id).filter(training_chat.id > result.id).first()
 			return result2.text
-		else:
-			print(clean_string(result.text) + ' is not ' + clean_string(inputMessage))
 	
 	if subjectNode is not 0:
 		results = training_chat.query.filter_by(node_id=subjectNode).order_by(training_chat.id)
