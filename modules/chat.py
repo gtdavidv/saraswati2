@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint, render_template, request, session
+from random import randint
 from db import *
 import operator
 from helpers import *
