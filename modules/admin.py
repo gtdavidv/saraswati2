@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect
 from db import *
-from helpers import node_select_list
+from helpers import node_select_list, clean_training_chats
 
 admin = Blueprint('admin', __name__)
 
@@ -10,17 +10,8 @@ def admin_page():
 
 @admin.route('/training_chats')
 def training_chats():
-	results = training_chat.query.order_by(training_chat.chat_id)
-	chats = []
-	for result in results:
-		addResult = True
-		for chat in chats:
-			if chat.chat_id == result.chat_id:
-				addResult = False
-				break
-		
-		if addResult:
-			chats.append(result)
+	results = training_chat.query.order_by(training_chat.chat_id).all()
+	chats = clean_training_chats(results)
 			
 	return render_template("training_chats.html", chats = chats)
 	
@@ -45,6 +36,7 @@ def render_training_chat():
 				newItem = type('tmp', (object,), {})
 				newItem.party = result.party
 				newItem.text = result.text
+				newItem.node_id = result.node_id
 				newItem.node_name = graphNode.title
 				newItem.id = result.id
 				training_chats.append(newItem)
@@ -73,21 +65,31 @@ def add_training_chat():
 	
 	#return render_training_chat()
 	
-@admin.route('/graph')
-def graph():
-	if "del" in request.args:
-		semantic_graph_node.query.filter_by(id=request.args["del"]).delete()
-		db.session.commit()
-		
-	return render_template("graph.html", nodes = semantic_graph_node.query.all())
-
 @admin.route('/graph', methods=['POST'])
 def add_node():
-	insertNode = semantic_graph_node(request.form.get('title'))
+	insertNode = semantic_graph_node(request.values.get('title'))
 	db.session.add(insertNode)
 	db.session.commit()
 	
 	return graph()
+
+@admin.route('/graph')
+def graph():
+	if "del" in request.args and "title" not in request.values:
+		delNode = semantic_graph_node.query.filter_by(id=request.args["del"]).first()
+		db.session.delete(delNode)
+		db.session.commit()
+		
+	return render_template("graph.html", nodes = semantic_graph_node.query.all())
+
+@admin.route('/node', methods=['POST'])
+def add_relationship_process():
+	nodeID = request.args['id']
+	insertRelationship = semantic_graph_relationship(nodeID, request.form.get('node_list'), request.form.get('relationship_1_to_2'), request.form.get('relationship_2_to_1'))
+	db.session.add(insertRelationship)
+	db.session.commit()
+	
+	return view_node()
 
 @admin.route('/node')
 def view_node():
@@ -126,17 +128,11 @@ def view_node():
 		titleQuery = semantic_graph_node.query.filter_by(id = result.node_id_1).first()
 		newItem.nodeTitle = titleQuery.title
 		nodeList.append(newItem)
+		
+	results = training_chat.query.order_by(training_chat.chat_id).filter_by(node_id = nodeID)
+	chats = clean_training_chats(results)
 	
-	return render_template("node.html", nodes = nodeList, node_id = nodeID, node_name = nodeName)
-	
-@admin.route('/node', methods=['POST'])
-def add_relationship_process():
-	nodeID = request.args['id']
-	insertRelationship = semantic_graph_relationship(nodeID, request.form.get('node_list'), request.form.get('relationship_1_to_2'), request.form.get('relationship_2_to_1'))
-	db.session.add(insertRelationship)
-	db.session.commit()
-	
-	return view_node()
+	return render_template("node.html", nodes = nodeList, node_id = nodeID, node_name = nodeName, chats = chats)
 
 @admin.route('/add_relationship')
 def add_relationship_form():

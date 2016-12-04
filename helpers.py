@@ -1,7 +1,7 @@
 from db import *
 
 def node_select_list():
-	returnString = "<select name=\"node_list\" id=\"node_list_select\">"
+	returnString = "<select name=\"node_list\" id=\"node_list_select\" class=\"form-control\">"
 	
 	results = semantic_graph_node.query.order_by(semantic_graph_node.title.asc())
 	if not results:
@@ -20,3 +20,17 @@ def clean_string(inputString):
 	outputString = ''.join(filter(whitelist.__contains__, inputString))
 	
 	return outputString
+
+def clean_training_chats(inputList):
+	chats = []
+	for result in inputList:
+		addResult = True
+		for chat in chats:
+			if chat.chat_id == result.chat_id:
+				addResult = False
+				break
+		
+		if addResult:
+			chats.append(result)
+	
+	return chats

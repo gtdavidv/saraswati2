@@ -12,18 +12,28 @@
 			{% else %}
 				Human: 
 			{% endif %}
-			({{ chat.node_name }})<br />
+			(<a href="node?id={{ chat.node_id }}">{{ chat.node_name }}</a>)<br />
 			{{ chat.text }}<br />
 			<a href="training_chat?id={{ chat_id }}&del={{ chat.id }}" style="font-size: 0.8em;" onclick="return confirm('Are you sure?')">Delete</a>
 			<div style="height: 0.5em;"></div>
 		{% endfor %}
 		<form action="" method="post" onsubmit="return check_add_training_chat()"><div style="margin-top: 0.5em;">
-			Semantic Graph Node: {{ node_select_list|safe }}<br />
-			Party: <select name="party"><option value="0">AI</option><option value="1">Human</option></select><br />
-			Message:<br />
-			<textarea name="message" id="message" rows="4" style="width: 400px;"></textarea>
+			<div class="form-group row">
+				<label for="node_list_select" class="col-xs-3 col-form-label">Semantic Graph Node</label>
+				<div class="col-xs-9">{{ node_select_list|safe }}</div>
+			</div>
+			<div class="form-group row">
+				<label for="party" class="col-xs-3 col-form-label">Party</label>
+				<div class="col-xs-9">
+					<select name="party" id="party" class="form-control"><option value="0">AI</option><option value="1">Human</option></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="message">Message</label>
+				<textarea class="form-control" name="message" id="message" rows="4"></textarea>
+			</div>
 			<div style="height: 0.7em;"></div>
-			<input type="submit" value="Add" />
+			<input class="btn btn-primary" type="submit" value="Add" />
 		</div></form>
 	</div>
   </div>

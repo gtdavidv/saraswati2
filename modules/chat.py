@@ -13,7 +13,7 @@ def index():
 		session['session_id'] = str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
 		
 	messageList = []
-	results = message.query.filter_by(session_id=session['session_id'])
+	results = message.query.filter_by(session_id=session['session_id']).order_by(message.id)
 	for result in results:
 		newItem = type('tmp', (object,), {})
 		newItem.text = result.text
@@ -76,7 +76,7 @@ def determine_node(inputMessage):
 			
 			if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
 				addAmount *= 3
-				print(posTag[counter][0] + ' - ' + posTag[counter][1])
+				#print(posTag[counter][0] + ' - ' + posTag[counter][1])
 				
 			if result.node_id in nodeList:
 				nodeList[result.node_id] += addAmount

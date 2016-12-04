@@ -16,6 +16,11 @@
 				<a href="node?id={{ node.other_node_id }}">{{ node.nodeTitle }}</a> - {{node.relationship}} - <a href="node?id={{ node_id }}&del={{ node.relationship_id }}" onclick="return confirm('Are you sure?');">Delete relationship</a><br />
 			{% endfor %}
 		{% endif %}
+		<div style="height: 1em;"></div>
+		{% for chat in chats %}
+			<a href="training_chat?id={{ chat.chat_id }}">{{ chat.text }}</a>
+			<div style="height: 0.5em;"></div>
+		{% endfor %}
 	</div>
   </div>
 {% endblock %}
