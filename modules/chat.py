@@ -74,9 +74,11 @@ def determine_node(inputMessage):
 				addAmount += 3
 			addAmount /= resultCount
 			
+			#print(posTag[counter][0] + ' - ' + posTag[counter][1])
 			if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
 				addAmount *= 3
-				#print(posTag[counter][0] + ' - ' + posTag[counter][1])
+			elif posTag[counter][1] == 'JJ' or posTag[counter][1] == 'JJS' or posTag[counter][1] == 'JJR':
+				addAmount *= 2
 				
 			if result.node_id in nodeList:
 				nodeList[result.node_id] += addAmount
