@@ -61,7 +61,6 @@ def determine_node(inputMessage):
 	for word in inputList:
 		searchString = "%" + word + "%"
 		results = training_chat.query.filter(training_chat.text.ilike(searchString))
-		resultCount = training_chat.query.filter(training_chat.text.ilike(searchString)).count()
 		
 		anyResults = False	
 		for result in results:
@@ -72,7 +71,9 @@ def determine_node(inputMessage):
 				addAmount += 1
 			else:
 				addAmount += 3
-			addAmount /= resultCount
+			
+			resultCount = training_chat.query.filter_by(node_id = result.node_id).count()
+			addAmount /= resultCount #Divide by the number of training chats pointing to that node
 			
 			#print(posTag[counter][0] + ' - ' + posTag[counter][1])
 			if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
