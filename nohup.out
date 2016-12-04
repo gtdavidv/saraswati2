@@ -1,0 +1,19 @@
+ * Running on http://0.0.0.0:8080/ (Press CTRL+C to quit)
+73.176.33.212 - - [04/Dec/2016 16:53:39] "GET / HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:53:40] "GET /static/js/chat.js HTTP/1.1" 304 -
+73.176.33.212 - - [04/Dec/2016 16:53:40] "GET /static/styles.css HTTP/1.1" 304 -
+ * Running on http://0.0.0.0:8080/ (Press CTRL+C to quit)
+73.176.33.212 - - [04/Dec/2016 16:55:44] "GET / HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:55:44] "GET /static/styles.css HTTP/1.1" 304 -
+73.176.33.212 - - [04/Dec/2016 16:55:44] "GET /static/js/chat.js HTTP/1.1" 304 -
+73.176.33.212 - - [04/Dec/2016 16:55:56] "POST /process_chat HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:55:56] "POST /process_response HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:03] "POST /process_chat HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:03] "POST /process_response HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:13] "POST /process_chat HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:13] "POST /process_response HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:19] "POST /process_chat HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:19] "POST /process_response HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:23] "GET /training_chats HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:33] "POST /process_chat HTTP/1.1" 200 -
+73.176.33.212 - - [04/Dec/2016 16:56:33] "POST /process_response HTTP/1.1" 200 -
