@@ -64,7 +64,9 @@ def process_response_slack():
 	db.session.add(insertMessage)
 	db.session.commit()
 	
-	return responseText
+	responseObj = '{"response_type": "in_channel", "text": "' + responseText + '"}'
+	
+	return responseObj
 
 def determine_node(inputMessage):
 	inputList = clean_string(inputMessage).lower().split()
