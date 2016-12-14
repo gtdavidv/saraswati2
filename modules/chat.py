@@ -4,7 +4,7 @@ from db import *
 import operator
 from helpers import *
 import nltk
-import json
+import jsonify
 
 chat = Blueprint('chat', __name__)
 	
@@ -65,7 +65,7 @@ def process_response_slack():
 	db.session.add(insertMessage)
 	db.session.commit()
 	
-	responseObj = json.dumps({"response_type": "in_channel", "text": responseText})
+	responseObj = jsonify({"response_type": "in_channel", "text": responseText})
 	
 	return responseObj
 
