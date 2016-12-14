@@ -1,10 +1,9 @@
-from flask import Flask, Blueprint, render_template, request, session
+from flask import Flask, Blueprint, render_template, request, session, jsonify
 from random import randint
 from db import *
 import operator
 from helpers import *
 import nltk
-import jsonify
 
 chat = Blueprint('chat', __name__)
 	
