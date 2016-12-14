@@ -51,6 +51,20 @@ def process_response():
 		return responseText
 	else:
 		return False
+		
+@chat.route('/process_response_slack', methods=['POST'])
+def process_response_slack():
+	inputMessage = request.form.get('text')
+	
+	#Figure out the subject node in the semantic graph
+	subjectNode = determine_node(inputMessage)
+	responseText = determine_response(inputMessage, subjectNode)
+	
+	insertMessage = message(inputMessage, 1, 0)
+	db.session.add(insertMessage)
+	db.session.commit()
+	
+	return responseText
 
 def determine_node(inputMessage):
 	inputList = clean_string(inputMessage).lower().split()
