@@ -64,7 +64,7 @@ def process_response_slack():
 	db.session.add(insertMessage)
 	db.session.commit()
 	
-	responseObj = '{"response_type": "in_channel", "text": "' + responseText + '"}'
+	responseObj = json.dumps('{"response_type": "in_channel", "text": "' + responseText + '"}')
 	
 	return responseObj
 
