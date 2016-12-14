@@ -4,6 +4,7 @@ from db import *
 import operator
 from helpers import *
 import nltk
+import json
 
 chat = Blueprint('chat', __name__)
 	
