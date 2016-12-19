@@ -18,6 +18,7 @@ def training_chats():
 @admin.route('/training_chat')
 def render_training_chat():
 	if "id" in request.args:
+		nodeID = None
 		chatID = request.args["id"]
 		results = training_chat.query.filter_by(chat_id=chatID)
 		if not results:
@@ -29,22 +30,28 @@ def render_training_chat():
 				
 			training_chats = []
 			for result in results:
+				nodeID = result.node_id
+				newItem = type('tmp', (object,), {})
+				
 				graphNode = semantic_graph_node.query.filter_by(id=result.node_id).first()
 				if not graphNode:
-					return render_template("error.html", error_message="Database error: missing node")
+					#return render_template("error.html", error_message="Database error: missing node")
+					newItem.node_name = 'n/a'
+				else:
+					newItem.node_name = graphNode.title
 				
-				newItem = type('tmp', (object,), {})
 				newItem.party = result.party
 				newItem.text = result.text
 				newItem.node_id = result.node_id
-				newItem.node_name = graphNode.title
+				
 				newItem.id = result.id
 				training_chats.append(newItem)
 	else:
 		training_chats = []
 		chatID = 0
+		nodeID = 0
 		
-	return render_template("training_chat.html", node_select_list = node_select_list(), chats = training_chats, chat_id = chatID)
+	return render_template("training_chat.html", node_select_list = node_select_list(nodeID), chats = training_chats, chat_id = chatID)
 
 @admin.route('/training_chat', methods=['POST'])
 def add_training_chat():
@@ -145,3 +152,19 @@ def add_relationship_form():
 		nodeName = thisNode.title
 		
 	return render_template("add_relationship.html", node_id = nodeID, node_select_list = node_select_list(), node_name = nodeName)
+	
+@admin.route('/chat_history')
+def chat_history():
+	messageList = []
+	results = message.query.order_by(message.id)
+	for result in results:
+		newItem = type('tmp', (object,), {})
+		newItem.text = result.text
+		newItem.time = result.time
+		newItem.party = result.party
+		if result.party is None:
+			newItem.party = 1
+			
+		messageList.append(newItem)
+		
+	return render_template("chat_history.html", messages = messageList)

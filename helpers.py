@@ -1,6 +1,6 @@
 from db import *
 
-def node_select_list():
+def node_select_list(nodeID=None):
 	returnString = "<select name=\"node_list\" id=\"node_list_select\" class=\"form-control\">"
 	
 	results = semantic_graph_node.query.order_by(semantic_graph_node.title.asc())
@@ -9,7 +9,10 @@ def node_select_list():
 	else:
 		returnString += "<option value=\"\">Pick one</option>"
 		for node in results:
-			returnString += "<option value=\"" + str(node.id) + "\">" + node.title + "</option>"
+			if nodeID == node.id:
+				returnString += "<option value=\"" + str(node.id) + "\" selected=\"selected\">" + node.title + "</option>"
+			else:
+				returnString += "<option value=\"" + str(node.id) + "\">" + node.title + "</option>"
 		
 	returnString += "</select>"
 	

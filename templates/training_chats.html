@@ -9,7 +9,7 @@
 		<a href="training_chat"><input type="button" value="Add New Training Chat" /></a>
 		<div style="height: 0.8em;"></div>
 		{% for chat in chats %}
-			<a href="training_chat?id={{ chat.chat_id }}">{{ chat.text }}</a>
+			<a href="training_chat?id={{ chat.chat_id }}">{{ chat.text if chat.text != '' else '-blank-' }}</a>
 			<div style="height: 0.5em;"></div>
 		{% endfor %}
 	</div>

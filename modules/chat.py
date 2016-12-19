@@ -4,6 +4,7 @@ from db import *
 import operator
 from helpers import *
 import nltk
+from sqlalchemy import and_
 
 chat = Blueprint('chat', __name__)
 	
@@ -93,7 +94,7 @@ def determine_node(inputMessage):
 			
 			#print(posTag[counter][0] + ' - ' + posTag[counter][1])
 			if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
-				addAmount *= 3
+				addAmount *= 100
 			elif posTag[counter][1] == 'JJ' or posTag[counter][1] == 'JJS' or posTag[counter][1] == 'JJR':
 				addAmount *= 2
 				
@@ -118,8 +119,42 @@ def determine_response(inputMessage, subjectNode):
 			return result2.text
 	
 	if subjectNode is not 0:
-		results = training_chat.query.filter_by(node_id=subjectNode).order_by(training_chat.id)
-		responseText = results[1].text
+		print('Diving into node '+str(subjectNode))
+		inputList = clean_string(inputMessage).lower().split()
+		posTag = nltk.pos_tag(inputList)
+		
+		chatList = {}
+		counter = 0
+		for word in inputList:
+			searchString = "%" + word + "%"
+			results = training_chat.query.filter(training_chat.text.ilike(searchString)).filter_by(node_id=subjectNode).order_by(training_chat.id)
+			
+			for result in results:
+				addAmount = 0
+				if result.party == 0:
+					addAmount += 1
+				else:
+					addAmount += 3
+				
+				print(posTag[counter][0] + ' - ' + posTag[counter][1])
+				if posTag[counter][1] == 'NN' or posTag[counter][1] == 'NNS' or posTag[counter][1] == 'NNP' or posTag[counter][1] == 'NNPS':
+					addAmount *= 3
+				elif posTag[counter][1] == 'JJ' or posTag[counter][1] == 'JJS' or posTag[counter][1] == 'JJR':
+					addAmount *= 2
+					
+				if result.chat_id in chatList:
+					chatList[result.chat_id] += addAmount
+				else:
+					chatList[result.chat_id] = addAmount
+			
+			counter += 1
+		
+		topChat = max(chatList, key=chatList.get)
+		result = training_chat.query.filter(and_(training_chat.chat_id==topChat, training_chat.party==0)).order_by(training_chat.id).first()
+		if result is not None:
+			responseText = result.text
+		else:
+			responseText = "Sorry, I'm having some trouble responding"
 	else:
 		responseText = "Sorry, I didn't understand that"
 	

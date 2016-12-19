@@ -6,12 +6,14 @@
 ///////////////
 // Add listener for enter key when the chat box is selected (treat like submit)
 ///////////////
-document.getElementById('chat-input').onkeyup = function(e) {
-   var key = e.keyCode ? e.keyCode : e.which;
+if (document.getElementById('chat-input')){
+	document.getElementById('chat-input').onkeyup = function(e) {
+	   var key = e.keyCode ? e.keyCode : e.which;
 
-   if (key == 13) {
-	   sendChat();
-   }
+	   if (key == 13) {
+		   sendChat();
+	   }
+	}
 }
 
 ///////////////
